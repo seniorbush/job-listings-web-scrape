@@ -8,21 +8,33 @@ url = "https://www.mcsgroup.jobs/jobs/?keyword=developer&location=belfast&radius
 response = requests.get(url, allow_redirects=False, timeout=4)
 html = response.text
 
-
 soup = BeautifulSoup(html, "html.parser") # web-scraper
+results = soup.findAll("div", { "class" : "card job MCS" })
 
-# Outer Most Entry Point of HTML:
-outer_most_point = soup.find('div',attrs={'class': 'container-rl results-container'})
+jobs = {}
 
-results = soup.findA("div", { "class" : "card job MCS" })
 
 for result in results:
     
-    # jobs = []
 
-    # if (result["class"] == "xs-heading job-title"):
-    #     jobs.append(result)
-    print(result)
+    job_listing_details = result.findAll("div", {"class" : "col"})
+
+    job_date_posted = job_listing_details[0].find("span").text[7:]
+    job_title = job_listing_details[2].find("h4").text
+    job_link = f'https://www.mcsgroup.jobs{job_listing_details[2].find("a")["href"]}'
+    job_salary = job_listing_details[3].find("strong").text
+    job_location = job_listing_details[4].find("strong").text
+    job_type = job_listing_details[5].find("strong").text
+
+
+    jobs[job_title] = {
+        "salary" : job_salary, 
+        "location" : job_location,
+        "type" : job_type,
+        "date" : job_date_posted,
+        "link" : job_link
+        }
+
+print(jobs)
         
     
-# print(jobs)
