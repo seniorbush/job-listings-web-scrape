@@ -2,7 +2,7 @@
 
 ## Description
 
-Script to scrape the webiste and return recent developer job listings near Belfast.
+Script to scrape webiste and return recent developer job listings near Belfast.
 
 ### Dependencies
 
