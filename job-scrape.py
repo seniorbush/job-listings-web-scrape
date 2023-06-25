@@ -9,17 +9,17 @@ response = requests.get(url, allow_redirects=False, timeout=4)
 html = response.text
 
 soup = BeautifulSoup(html, "html.parser") # web-scraper
-results = soup.findAll("div", { "class" : "card job MCS" })
+results = soup.findAll("div", { "class" : "card job MCS" }) #accessign outer element
 
 jobs = {}
 
 
 for result in results:
     
+    
+    job_listing_details = result.findAll("div", {"class" : "col"}) #columns with data required
 
-    job_listing_details = result.findAll("div", {"class" : "col"})
-
-    job_date_posted = job_listing_details[0].find("span").text[7:]
+    job_listing_date = job_listing_details[0].find("span").text[7:]
     job_title = job_listing_details[2].find("h4").text
     job_link = f'https://www.mcsgroup.jobs{job_listing_details[2].find("a")["href"]}'
     job_salary = job_listing_details[3].find("strong").text
@@ -28,13 +28,19 @@ for result in results:
 
 
     jobs[job_title] = {
-        "salary" : job_salary, 
-        "location" : job_location,
-        "type" : job_type,
-        "date" : job_date_posted,
-        "link" : job_link
+        "Salary" : job_salary, 
+        "Location" : job_location,
+        "Type" : job_type,
+        "Listed" : job_listing_date,
+        "Link" : job_link
         }
-
-print(jobs)
-        
     
+    # jobs[job_title] = [job_salary, job_location, job_type, job_date_posted, job_link]
+
+
+#create dataframe
+# df = pd.DataFrame(jobs, columns=["Title","Salary","Location","Type","Date","Link"])
+df = pd.DataFrame.from_dict(jobs)
+
+print(df)
+
