@@ -5,11 +5,14 @@ import pandas as pd             # dataframes
 jobs = {}
 page_number = 1
 
-page = f"https://www.mcsgroup.jobs/jobs/?keyword=developer&page=1"
+term = input("Input job search keyword: \n")
+
+page = f"https://www.mcsgroup.jobs/jobs/?keyword={term}&page={page_number}"
 
 
 for page in range(1, 4):
-    page = f"https://www.mcsgroup.jobs/jobs/?keyword=developer&page={page_number}"
+   
+    page = f"https://www.mcsgroup.jobs/jobs/?keyword={term}&page={page_number}"
 
     response = requests.get(page, allow_redirects=False, timeout=4)
     html = response.text
@@ -32,7 +35,7 @@ for page in range(1, 4):
 
 
         jobs[job_title] = {
-            "Salary" : job_salary[:6], 
+            "Min Salary" : job_salary[:6], 
             "Location" : job_location,
             "Type" : job_type,
             "Listed" : job_listing_date,
@@ -48,5 +51,9 @@ pd.set_option('max_colwidth', None)
 
 df = pd.DataFrame.from_dict(jobs).transpose() # transpose swaps rows to columns
 
-print(df)
+
+if df.empty:
+    print('No results found!')
+else:
+    print(df)
 
