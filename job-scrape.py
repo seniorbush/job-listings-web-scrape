@@ -9,7 +9,7 @@ response = requests.get(url, allow_redirects=False, timeout=4)
 html = response.text
 
 soup = BeautifulSoup(html, "html.parser") # web-scraper
-results = soup.findAll("div", { "class" : "card job MCS" }) #accessign outer element
+results = soup.findAll("div", { "class" : "card job MCS" }) # accessing outer html element
 
 jobs = {}
 
@@ -17,8 +17,9 @@ jobs = {}
 for result in results:
     
     
-    job_listing_details = result.findAll("div", {"class" : "col"}) #columns with data required
+    job_listing_details = result.findAll("div", {"class" : "col"}) # columns with data required
 
+    # collect target job information
     job_listing_date = job_listing_details[0].find("span").text[7:]
     job_title = job_listing_details[2].find("h4").text
     job_link = f'https://www.mcsgroup.jobs{job_listing_details[2].find("a")["href"]}'
@@ -28,19 +29,15 @@ for result in results:
 
 
     jobs[job_title] = {
-        "Salary" : job_salary, 
+        "Salary" : job_salary[:6], 
         "Location" : job_location,
         "Type" : job_type,
         "Listed" : job_listing_date,
         "Link" : job_link
         }
     
-    # jobs[job_title] = [job_salary, job_location, job_type, job_date_posted, job_link]
 
-
-#create dataframe
-# df = pd.DataFrame(jobs, columns=["Title","Salary","Location","Type","Date","Link"])
-df = pd.DataFrame.from_dict(jobs)
+df = pd.DataFrame(jobs).transpose() # transpose swaps rows to columns
 
 print(df)
 
