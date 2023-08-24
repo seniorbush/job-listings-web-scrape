@@ -14,7 +14,7 @@ for page in range(1, 4):
    
     page = f"https://www.mcsgroup.jobs/jobs/?keyword={term}&page={page_number}"
 
-    response = requests.get(page, allow_redirects=False, timeout=4)
+    response = requests.get(page, allow_redirects=False, timeout=8)
     html = response.text
 
     soup = BeautifulSoup(html, "html.parser") # web-scraper
